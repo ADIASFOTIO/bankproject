@@ -2,9 +2,7 @@ package it.adias.bankproject.model.services.implementations;
 
 import it.adias.bankproject.model.dto.AccountDto;
 import it.adias.bankproject.model.dto.UserDto;
-import it.adias.bankproject.model.entities.Account;
 import it.adias.bankproject.model.entities.User;
-import it.adias.bankproject.model.repositories.AccountRepository;
 import it.adias.bankproject.model.repositories.UserRepository;
 import it.adias.bankproject.model.services.abstractions.AccountService;
 import it.adias.bankproject.model.services.abstractions.UserService;
