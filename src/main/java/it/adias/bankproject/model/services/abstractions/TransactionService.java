@@ -5,5 +5,5 @@ import it.adias.bankproject.model.dto.TransactionDto;
 import java.util.List;
 
 public interface TransactionService extends AbstractService<TransactionDto>{
-    List<TransactionDto> findAllById(Integer userId);
+    List<TransactionDto> findAllByUserId(Integer userId);
 }

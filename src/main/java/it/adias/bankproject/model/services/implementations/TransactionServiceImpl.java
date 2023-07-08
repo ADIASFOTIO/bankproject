@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> findAllById(Integer userId) {
+    public List<TransactionDto> findAllByUserId(Integer userId) {
         return repository.findAllByUserId(userId)
                 .stream()
                 .map(TransactionDto::convertEntityToDto)
