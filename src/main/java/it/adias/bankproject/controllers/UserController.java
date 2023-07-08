@@ -19,6 +19,7 @@ public class UserController {
     }
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> findAll(){
+
         return ResponseEntity.ok(service.findAll());
     }
     @GetMapping("/{user-id}")
