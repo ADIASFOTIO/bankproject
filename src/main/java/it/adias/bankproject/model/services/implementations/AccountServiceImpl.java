@@ -20,32 +20,32 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final ObjectsValidator<AccountDto> validator;
-
     @Override
     public Integer save(AccountDto dto) {
-        // impedisce di cambiare l'iban
+        // block account update -> iban cannot be changed
+    /* if (dto.getId() != null) {
+      throw new OperationNonPermittedException(
+          "Account cannot be updated",
+          "save account",
+          "Account",
+          "Update not permitted"
+      );
+    }*/
         validator.validate(dto);
-        if (dto.getId() != null){
-            throw new OperationNonPermittedException(
-                    "non puo modificare un account",
-                    "save account",
-                    "Account",
-                    "impossibile modificare un account"
-            );
-        }
         Account account = AccountDto.convertDtoToEntity(dto);
-        //prima di fare il save devo verificare che non c'è un user con lo stesso Account uguale
-        boolean userHasAlreadyAccount = repository.findByUserId(account.getUser().getId()).isPresent();
-        if (userHasAlreadyAccount){
-            throw  new OperationNonPermittedException(
-                    "Questo conto appartiene già ad un user",
+        boolean userHasAlreadyAnAccount = repository.findByUserId(account.getUser().getId()).isPresent();
+        if (userHasAlreadyAnAccount) {
+            throw new OperationNonPermittedException(
+                    "the selected user has already an active account",
                     "Create account",
-                    "AccountService",
-                    "Creazione dell'account"
+                    "Account service",
+                    "Account creation"
             );
         }
-        // generate random iban
-        account.setIban(generateRandomIban());
+        // generate random IBAN when creating new account else do not update the IBAN
+        if (dto.getId() == null) {
+            account.setIban(generateRandomIban());
+        }
         return repository.save(account).getId();
     }
 
@@ -61,21 +61,26 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto findById(Integer id) {
         return repository.findById(id)
                 .map(AccountDto::convertEntityToDto)
-                .orElseThrow(()-> new EntityNotFoundException("No account was found with the ID :" + id));
+                .orElseThrow(() -> new EntityNotFoundException("No account was found with the ID : " + id));
     }
 
     @Override
     public void delete(Integer id) {
-        //TODO
+        // todo check delete account
         repository.deleteById(id);
     }
-    // generate random iban
-    private String generateRandomIban(){
+
+    private String generateRandomIban() {
+        // generate an iban
         String iban = Iban.random(CountryCode.IT).toFormattedString();
-       boolean ibanExist = repository.findByIban(iban).isPresent();
-         if (ibanExist){
-             generateRandomIban();
-         }
+
+        // check if the iban already exists
+        boolean ibanExists = repository.findByIban(iban).isPresent();
+        // if exists -> generate new random iban
+        if (ibanExists) {
+            generateRandomIban();
+        }
+        // if not exist -> return generated iban
         return iban;
     }
 }

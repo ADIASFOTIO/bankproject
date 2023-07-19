@@ -1,5 +1,6 @@
 package it.adias.bankproject.model.services.implementations;
 
+import it.adias.bankproject.model.dto.TransactionSumDetails;
 import it.adias.bankproject.model.entities.TransactionType;
 import it.adias.bankproject.model.repositories.TransactionRepository;
 import it.adias.bankproject.model.services.abstractions.StatisticsService;
@@ -10,13 +11,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
     private final TransactionRepository transactionRepository;
     @Override
-    public Map<LocalDate, BigDecimal> findSumTransactionsByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
+    public List<TransactionSumDetails> findSumTransactionsByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
         LocalDateTime start = LocalDateTime.of(startDate, LocalTime.of(0,0,0));
         LocalDateTime end = LocalDateTime.of(endDate, LocalTime.of(23,59,59));
         return transactionRepository.findSumTransactionsByDate(start, end, userId);

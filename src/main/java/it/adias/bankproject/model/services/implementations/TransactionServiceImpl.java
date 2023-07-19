@@ -49,6 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
         repository.deleteById(id);
     }
     private int transactionMultiplier(TransactionType type){
+
         return TransactionType.TRANSFERT == type ? -1 : 1;
     }
 

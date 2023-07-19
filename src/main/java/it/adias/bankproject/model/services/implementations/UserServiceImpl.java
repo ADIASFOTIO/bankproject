@@ -48,13 +48,13 @@ public class UserServiceImpl implements UserService {
         User user = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("No user was found for user account validation"));
         user.setActive(true);
+        repository.save(user);
         // adesso poso creare un conto
         // uso accountService visto che c'è già la logica per generare l'iban
-        AccountDto account = AccountDto.builder()
+        AccountDto accountDto = AccountDto.builder()
                 .userDto(UserDto.convertEntityToDto(user))
                 .build();
-        accountService.save(account);
-        repository.save(user);
+        accountService.save(accountDto);
         return user.getId();
     }
 

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -27,10 +28,12 @@ public class TransactionDto {
     private BigDecimal amount;
     private String destinationIban;
     private TransactionType type;
+    private LocalDate transactionDate;
     private Integer userId;
     public static TransactionDto convertEntityToDto(Transaction transaction){
         return TransactionDto.builder()
                 .id(transaction.getId())
+                .transactionDate(transaction.getTransactionDate())
                 .amount(transaction.getAmount())
                 .destinationIban(transaction.getDestinationIban())
                 .type(transaction.getType())
@@ -41,6 +44,7 @@ public class TransactionDto {
         return Transaction.builder()
                 .id(transactionDto.getId())
                 .amount(transactionDto.getAmount())
+                .transactionDate(LocalDate.now())
                 .destinationIban(transactionDto.getDestinationIban())
                 .type(transactionDto.getType())
                 .user(User.builder()
